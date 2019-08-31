@@ -1,6 +1,5 @@
 import React, { Fragment } from "react";
-import styled from "react-emotion";
-import css from 'react-emotion';
+import styled, { css } from "react-emotion";
 // import { Link } from "react-dom";
 import _ from 'lodash';
 
@@ -47,6 +46,7 @@ const Item = styled('a')`
 const dynamicStyle = props =>
   css`
     color: ${props.color};
+    background-color: green;
   `;
 
 const SubContainer = styled('div')`
@@ -66,8 +66,7 @@ const SubContainer = styled('div')`
   text-overflow: ellipsis;
   overflow: hidden;
   
-  //${dynamicStyle}
-  
+  ${dynamicStyle}  
 `;
 
 const Menu = ({categories, onClose,  ...props }) => {
@@ -101,7 +100,7 @@ const Menu = ({categories, onClose,  ...props }) => {
     logEvent(e);
   }
 
-  const clicky = (w,e) => {
+  const clicky = (e) => {
     logEvent(e);
   }
 
@@ -115,7 +114,7 @@ const Menu = ({categories, onClose,  ...props }) => {
       <Container>
         {_.times(20, () => categories.map(category => (
           <Fragment>
-            <Item key={++key} onMouseOver={MouseOver} onMouseOut={MouseOut} onMouseEnter={EnterHover} onMouseLeave={LeaveHover}>{category.id}: {category.name}</Item>
+            <Item key={++key} onClick={clicky} onMouseOver={MouseOver} onMouseOut={MouseOut} onMouseEnter={EnterHover} onMouseLeave={LeaveHover}>{category.id}: {category.name}</Item>
             <SubContainer>
             {category.children.map(sub => (
                 <Item key={++key} onMouseOver={MouseOver} onMouseOut={MouseOut} onMouseEnter={EnterHover} onMouseLeave={LeaveHover}>{sub.id}: {sub.name}</Item>
