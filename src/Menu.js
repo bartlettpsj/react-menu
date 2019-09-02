@@ -1,6 +1,6 @@
-import React, { Fragment, useState } from "react";
-import styled, { css } from "react-emotion";
-// import { Link } from "react-dom";
+import React, { Fragment, useState, useRef } from "react";
+import styled from "react-emotion";
+import ReactDOM from "react-dom";
 import _ from 'lodash';
 
 const Backdrop = styled('div')`
@@ -35,7 +35,8 @@ const MyItem = (props) => (
 const Item = styled(MyItem)`
   line-height: 2.0em;
   //width: 100%;
-  display: block;  
+  display: block;
+  position: static;    
 
   &:hover {
     font-weight: bold;
@@ -52,6 +53,7 @@ const MyStyledSubItem = styled(Item)`
   background-color: hotpink;
   color: ${props => props.color};
   //visibility: ${props => props.visibility};    
+  //position: static;
 `;
 
 const MySubItem = (props) => (
@@ -73,7 +75,7 @@ const MyStyledMySubItem = styled(MySubItem)`
 //   `;
 
 const calcLeft = (left) => {
-  return left+100 + 'px';
+  return left;//+100 + 'px';
 }
 
 const calcTop = (top) => {
@@ -82,10 +84,11 @@ const calcTop = (top) => {
 const StyledSubContainer = styled('div')`
   visibility: ${props => props.visibility};    
   //display: none;
+  //display: inline;
   position: absolute;
-  left: ${props => calcLeft(props.left)};
+  //left: ${props => calcLeft(props.left)};
   //left: 50%;
-  top: ${props => calcTop(props.top)};
+  //top: ${props => calcTop(props.top)};
   //padding: 1rem;
   background: white;
   //max-height: 700px;
@@ -106,6 +109,9 @@ const SubContainer = (props) => {
 const Menu = ({ categories, onClose, ...props }) => {
 
   const [myColor, setMyColor] = useState('blue');
+  const containerRef = useRef(null);
+  const [myLeft, setMyLeft] = useState(0);
+  const [myTop, setMyTop] = useState(0);
 
   // console.log(a,b);
 
@@ -119,10 +125,18 @@ const Menu = ({ categories, onClose, ...props }) => {
     logEvent(e);
 
     console.log('Child is: ', e.target.children[0]);
+    const itemRect = e.target.getBoundingClientRect();
+    console.log('item rect', itemRect)
 
     const node = ReactDOM
-      .findDOMNode();
-      // .getBoundingClientRect(); //outputs <h3> coordinates
+      .findDOMNode(containerRef.current);
+
+    const rect = node.getBoundingClientRect();
+    console.log('wrapper rect', rect);
+    // setMyLeft(itemRect.left + 200 + 'px');
+    setMyLeft(itemRect.left + e.target.offsetWidth + 'px');
+    setMyTop(itemRect.top + 'px');
+
 
     // Need to reposition div child based on this
     //How do we find the child
@@ -168,28 +182,36 @@ const Menu = ({ categories, onClose, ...props }) => {
     return num ? 'green' : 'red';
   }
 
+  const Wrapper = styled.div`
+    position: absolute;
+    visibility: hidden;
+    left: ${props => props.left};
+    top: ${props => props.top}    
+`;
+
   return (
 
     <Backdrop>
       <H1 color={myColor}>Stuff here</H1>
       <Container>
         {_.times(20, () => categories.map(category => (
-          <Fragment>
-            <Item paul={123} key={++key} onClick={clicky} onMouseOver={MouseOver} onMouseOut={MouseOut}
+            <Item paul={123} key={++key} onClick={clicky} onMouseOver={MouseOver}
+                  onMouseOut={MouseOut}
                   onMouseEnter={EnterHover} onMouseLeave={LeaveHover}>{category.id}: {category.name}
-              <SubContainer visibility={'hidden'} {...props} left={600}>
-                {category.children.map(sub => (
-                  <MySubItem {...props} key={++key} color={'blue'}
-                                     onMouseOver={MouseOver}
-                                     onMouseOut={MouseOut}
-                                     onMouseEnter={EnterHover}
-                                     onMouseLeave={LeaveHover}>
-                    {sub.id}: {sub.name}
-                  </MySubItem>
-                ))}
-              </SubContainer>
+              <Wrapper ref={containerRef} left={myLeft} top={myTop}>
+                {/*<SubContainer visibility={'hidden'} {...props} xleft={myLeft}>*/}
+                  {category.children.map(sub => (
+                    <MySubItem {...props} key={++key} color={'blue'}
+                               onMouseOver={MouseOver}
+                               onMouseOut={MouseOut}
+                               onMouseEnter={EnterHover}
+                               onMouseLeave={LeaveHover}>
+                      {sub.id}: {sub.name}
+                    </MySubItem>
+                  ))}
+                {/*</SubContainer>*/}
+              </Wrapper>
             </Item>
-          </Fragment>
         )))}
       </Container>
     </Backdrop>
