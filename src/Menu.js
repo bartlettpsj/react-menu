@@ -1,5 +1,5 @@
-import React, { Fragment, useState, useRef } from "react";
-import styled from "react-emotion";
+import React, { useState, useRef } from "react";
+import styled, { keyframes } from "react-emotion";
 import ReactDOM from "react-dom";
 import _ from 'lodash';
 
@@ -14,101 +14,50 @@ const Backdrop = styled('div')`
   z-index: 1;
 `;
 
+const slideIn = keyframes`
+ from { left: -300px; }
+ to { left: 0px;}
+`;
+
 const Container = styled('div')`
-  //position: relative;
   height: 100%;
   width: 200px;
   background: white;
   padding-top: 1.5em;
   //padding: 1.5rem;
   overflow-y: auto;
+  overflow-x: hidden;
   z-index: 2;  
-  //left: 500px;
-  //position: absolute;  
+  
+  animation: ${slideIn} 0.3s ease;
+  box-shadow-wmt: 0 1px 3px 0 rgba(0,0,0,.07),0 3px 13px 0 rgba(0,0,0,.16);    
+  box-shadow: 4px 0 10px 0 rgba(0,0,0,.4);  
 `;
 
-const MyItem = (props) => (
-  <a {...props} banana={'hello'}/>
+const StyledItem = (props) => (
+  <a {...props} href="/nothing" banana={'hello'}/>
 )
 
 // const Item = styled('a')`
-const Item = styled(MyItem)`
+const Item = styled(StyledItem)`
   line-height: 2.0em;
   //width: 100%;
   display: block;
   position: static;    
+  //text-decoration: none;  
 
   &:hover {
-    font-weight: bold;
+    //font-weight: bold;
+    //text-decoration: underline;    
   }
   
   &:hover > div {
-    //display: block;
-    //border: blue 4px solid;
     visibility: visible;
   }  
 `;
 
-const MyStyledSubItem = styled(Item)`
-  background-color: hotpink;
-  color: ${props => props.color};
-  //visibility: ${props => props.visibility};    
-  //position: static;
-`;
-
-const MySubItem = (props) => (
-  <MyStyledSubItem {...props}/>
-)
-
-const MyStyledStyledSubItem = styled(MyStyledSubItem)`
-  color: green;
-`
-
-const MyStyledMySubItem = styled(MySubItem)`
-  color: blanchedalmond;
-`
-
-// const dynamicStyle = props =>
-//   css`
-//     color: ${props.color};
-//     background-color: green;
-//   `;
-
-const calcLeft = (left) => {
-  return left;//+100 + 'px';
-}
-
-const calcTop = (top) => {
-  return '100px';
-}
-const StyledSubContainer = styled('div')`
-  visibility: ${props => props.visibility};    
-  //display: none;
-  //display: inline;
-  position: absolute;
-  //left: ${props => calcLeft(props.left)};
-  //left: 50%;
-  //top: ${props => calcTop(props.top)};
-  //padding: 1rem;
-  background: white;
-  //max-height: 700px;
-  //width: 75%;
-  //display: flex;
-  //flex-flow: column wrap;
-  z-index: 3;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
- `;
-//${dynamicStyle}
-
-const SubContainer = (props) => {
-  return <StyledSubContainer {...props} />
-}
-
 const Menu = ({ categories, onClose, ...props }) => {
 
-  const [myColor, setMyColor] = useState('blue');
   const containerRef = useRef(null);
   const [myLeft, setMyLeft] = useState(0);
   const [myTop, setMyTop] = useState(0);
@@ -122,94 +71,60 @@ const Menu = ({ categories, onClose, ...props }) => {
   }
 
   const EnterHover = (e) => {
-    logEvent(e);
+    // console.log('Enter Hover');
+    // logEvent(e);
 
-    console.log('Child is: ', e.target.children[0]);
+    // console.log('Child is: ', e.target.children[0]);
     const itemRect = e.target.getBoundingClientRect();
-    console.log('item rect', itemRect)
+    // console.log('item rect', itemRect)
 
-    const node = ReactDOM
-      .findDOMNode(containerRef.current);
-
-    const rect = node.getBoundingClientRect();
-    console.log('wrapper rect', rect);
-    // setMyLeft(itemRect.left + 200 + 'px');
+    // const node = ReactDOM
+    //   .findDOMNode(containerRef.current);
+    //
+    // const rect = node.getBoundingClientRect();
+    // console.log('wrapper rect', rect);
     setMyLeft(itemRect.left + e.target.offsetWidth + 'px');
     setMyTop(itemRect.top + 'px');
-
-
-    // Need to reposition div child based on this
-    //How do we find the child
-    // How do we change the css for that child using react
-    setColor();
   }
 
   const LeaveHover = (e) => {
-    logEvent(e);
+    // logEvent(e);
   }
 
 
-  const MouseOver = (e) => {
-    logEvent(e);
-  }
-
-  const MouseOut = (e) => {
-    logEvent(e);
-  }
+  // const MouseOver = (e) => {
+  //   logEvent(e);
+  // }
+  //
+  // const MouseOut = (e) => {
+  //   logEvent(e);
+  // }
 
   const clicky = (e) => {
     logEvent(e);
-    setColor();
-  }
-
-  const mover = (e) => {
-    logEvent(e);
-  }
-
-
-  const H1 = styled.h1`
-    font-size: 48px;
-    color: ${props => props.color};
-  `
-
-  const setColor = () => {
-    const num = Math.trunc(Math.random() * 2);
-    setMyColor(num ? 'green' : 'red')
-  }
-
-  const getColor = () => {
-    const num = Math.trunc(Math.random() * 2);
-    return num ? 'green' : 'red';
   }
 
   const Wrapper = styled.div`
     position: absolute;
     visibility: hidden;
+    background-color: white;        
     left: ${props => props.left};
-    top: ${props => props.top}    
+    top: ${props => props.top};
 `;
 
   return (
 
     <Backdrop>
-      <H1 color={myColor}>Stuff here</H1>
       <Container>
         {_.times(20, () => categories.map(category => (
-            <Item paul={123} key={++key} onClick={clicky} onMouseOver={MouseOver}
-                  onMouseOut={MouseOut}
+            <Item paul={123} key={++key}
                   onMouseEnter={EnterHover} onMouseLeave={LeaveHover}>{category.id}: {category.name}
               <Wrapper ref={containerRef} left={myLeft} top={myTop}>
-                {/*<SubContainer visibility={'hidden'} {...props} xleft={myLeft}>*/}
-                  {category.children.map(sub => (
-                    <MySubItem {...props} key={++key} color={'blue'}
-                               onMouseOver={MouseOver}
-                               onMouseOut={MouseOut}
-                               onMouseEnter={EnterHover}
-                               onMouseLeave={LeaveHover}>
-                      {sub.id}: {sub.name}
-                    </MySubItem>
-                  ))}
-                {/*</SubContainer>*/}
+                {category.children.map(sub => (
+                  <Item {...props} key={++key}>
+                    {sub.id}: {sub.name}
+                  </Item>
+                ))}
               </Wrapper>
             </Item>
         )))}
