@@ -12,26 +12,42 @@ const doClose = () => {
 const cats =
   [
     {
-      id: '123',
-      name: ' 1-2-3',
+      id: 'f001',
+      name: ' Fruit',
       children: [
         {
-          id: 'abc',
-          name: ' a-b-c'
+          id: 'apple1',
+          name: ' Apple'
         },
         {
-          id: 'def',
-          name: ' d-e-f'
+          id: 'pear1',
+          name: 'Pear'
+        },
+        {
+          id: 'banana1',
+          name: 'Banana'
+        },
+        {
+          id: 'peach1',
+          name: 'Peach'
         }
       ]
     },
     {
-      id: '456',
-      name: ' 4-5-6',
+      id: 'family1',
+      name: 'Family',
       children: [
         {
-          id: 'xyz',
-          name: ' x-y-z'
+          id: 'javed1',
+          name: 'Javed John'
+        },
+        {
+          id: 'farah1',
+          name: 'Farah Christine'
+        },
+        {
+          id: 'nazia1',
+          name: 'Nazia1'
         }
       ]
     }
