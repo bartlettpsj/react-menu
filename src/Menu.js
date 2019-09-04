@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import styled, { keyframes } from "react-emotion";
-import ReactDOM from "react-dom";
+// import ReactDOM from "react-dom";
 import _ from 'lodash';
 
 const Backdrop = styled('div')`
@@ -100,9 +100,9 @@ const Menu = ({ categories, onClose, ...props }) => {
   //   logEvent(e);
   // }
 
-  const clicky = (e) => {
-    logEvent(e);
-  }
+  // const clicky = (e) => {
+  //   logEvent(e);
+  // }
 
   const Wrapper = styled.div`
     position: absolute;
